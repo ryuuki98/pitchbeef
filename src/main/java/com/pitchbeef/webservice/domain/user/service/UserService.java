@@ -33,13 +33,23 @@ public class UserService {
     //READ
 
     /**
-     * 아이디로 유저 객체 검색
+     * userName로 유저 객체 검색
      * @param userName
      * @return User
      */
 
     public User findByUsername(String userName){
         return userRepository.findByUsername(userName);
+    }
+
+
+    /**
+     * 기본키로 유저 검색
+     * @param id
+     * @return User
+     */
+    public User findById(Long id){
+        return userRepository.findById(id).orElse(null);
     }
 
     //UPDATE
