@@ -45,11 +45,4 @@ public class User {
         this.password = password;
         this.enabled = enabled;
     }
-
-    public User(UserUpdateDto userUpdateDto) {
-        this.id = userUpdateDto.getId();
-        this.username = userUpdateDto.getUsername() != null ? userUpdateDto.getUsername() : this.username;
-        this.email = userUpdateDto.getEmail() != null ? userUpdateDto.getEmail() : this.email;
-        this.password = userUpdateDto.getPassword() != null ? userUpdateDto.getPassword() : this.password;
-    }
 }

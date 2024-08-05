@@ -45,14 +45,7 @@ public class UserService {
     //UPDATE
 
 
-    //미완성
-    public User updateUser(UserUpdateDto userUpdateDto){
-        User user = userRepository.findById(userUpdateDto.getId()).orElse(null);
-        if(user != null){
 
-        }
-        return userRepository.save(user);
-    }
 
     //DELETE
 
