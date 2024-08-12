@@ -54,14 +54,39 @@ public class UserService {
 
     //UPDATE
 
+    public User UpdateUser(Long id, UserUpdateDto userUpdateDto){
+        User user = createUserFromUserUpdateDto(id,userUpdateDto);
+        User updateUser = userRepository.save(user);
+        return updateUser;
+    }
+
 
 
 
     //DELETE
 
+    public boolean deleteUser(Long id){
+        User user = userRepository.findById(id).orElse(null);
+        if(user != null){
+            userRepository.delete(user);
+        }else return false;
+        return true;
+    }
 
-    private static User createUserFromUserJoinDto(UserJoinDto userJoinDto) {
-        User user = new User(userJoinDto.getUsername(), userJoinDto.getEmail(), userJoinDto.getPassword(),true);
+    private User createUserFromUserJoinDto(UserJoinDto userJoinDto) {
+        User user = new User(userJoinDto.getUsername(), userJoinDto.getEmail(), userJoinDto.getPassword());
         return user;
     }
+
+    private User createUserFromUserUpdateDto(Long id, UserUpdateDto userUpdateDto) {
+        User user = userRepository.findById(id).orElse(null);
+        if(user != null) {
+            user.updateUser(userUpdateDto);
+        }else return null;
+
+        return user;
+    }
+
+
+
 }
