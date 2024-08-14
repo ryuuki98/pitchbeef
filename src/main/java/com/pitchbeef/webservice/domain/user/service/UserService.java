@@ -1,11 +1,12 @@
 package com.pitchbeef.webservice.domain.user.service;
 
-
 import com.pitchbeef.webservice.domain.user.model.User;
 import com.pitchbeef.webservice.domain.user.repository.UserRepository;
 import com.pitchbeef.webservice.web.user.dto.UserJoinDto;
 import com.pitchbeef.webservice.web.user.dto.UserUpdateDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,17 +14,14 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
-
-
-
+    private final PasswordEncoder passwordEncoder;
 
     //CREATE
 
     /**
      * 유저 저장
-     *
      * @param userJoinDto
-     * @return user
+     * @return User
      */
     public User saveUser(UserJoinDto userJoinDto) {
         User user = createUserFromUserJoinDto(userJoinDto);
@@ -33,60 +31,53 @@ public class UserService {
     //READ
 
     /**
-     * userName로 유저 객체 검색
+     * userName으로 유저 객체 검색
      * @param userName
      * @return User
      */
-
-    public User findByUsername(String userName){
+    public User findByUsername(String userName) {
         return userRepository.findByUsername(userName);
     }
 
-
     /**
      * 기본키로 유저 검색
-     * @param id
+     * @param memberId
      * @return User
      */
-    public User findById(Long id){
-        return userRepository.findById(id).orElse(null);
+    public User findByMemberId(Long memberId) {
+        return userRepository.findById(memberId).orElse(null);
     }
 
     //UPDATE
 
-    public User UpdateUser(Long id, UserUpdateDto userUpdateDto){
-        User user = createUserFromUserUpdateDto(id,userUpdateDto);
-        User updateUser = userRepository.save(user);
-        return updateUser;
+    public User updateUser(Long memberId, UserUpdateDto userUpdateDto) {
+        User user = createUserFromUserUpdateDto(memberId, userUpdateDto);
+        return userRepository.save(user);
     }
-
-
-
 
     //DELETE
 
-    public boolean deleteUser(Long id){
-        User user = userRepository.findById(id).orElse(null);
-        if(user != null){
+    public boolean deleteUser(Long memberId) {
+        User user = userRepository.findById(memberId).orElse(null);
+        if (user != null) {
             userRepository.delete(user);
-        }else return false;
-        return true;
+            return true;
+        }
+        return false;
     }
 
     private User createUserFromUserJoinDto(UserJoinDto userJoinDto) {
-        User user = new User(userJoinDto.getUsername(), userJoinDto.getEmail(), userJoinDto.getPassword());
+        User user = new User(userJoinDto.getUsername(), userJoinDto.getEmail(), passwordEncoder.encode(userJoinDto.getPassword()));
         return user;
     }
 
-    private User createUserFromUserUpdateDto(Long id, UserUpdateDto userUpdateDto) {
-        User user = userRepository.findById(id).orElse(null);
-        if(user != null) {
+    private User createUserFromUserUpdateDto(Long memberId, UserUpdateDto userUpdateDto) {
+        User user = userRepository.findById(memberId).orElse(null);
+        if (user != null) {
             user.updateUser(userUpdateDto);
-        }else return null;
-
+        } else {
+            return null;
+        }
         return user;
     }
-
-
-
 }
