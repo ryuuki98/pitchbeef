@@ -24,39 +24,23 @@ public class UserController {
     private final UserService userService;
     private final AuthService authService;
 
+    @GetMapping("/login")
+    public String login(Model model) {
+        log.info("login");
+        model.addAttribute("user", new UserLoginDto());
+        return "user/login";
+    }
+
     @GetMapping("/join")
     public String join(Model model) {
+        log.info("join");
         model.addAttribute("userJoinDto", new UserJoinDto());
         return "user/join";
     }
 
-    @PostMapping("/joinProcess")
-    public String joinProcess(@ModelAttribute UserJoinDto userJoinDto) {
-        userService.saveUser(userJoinDto);
-        log.info("userJoinDto: {}", userJoinDto);
-        return "redirect:/user/join";
-    }
-
-    @PostMapping("/loginProcess")
-    public String loginProcess(@ModelAttribute UserLoginDto userLoginDto, HttpServletResponse response, Model model) {
-        log.info("userLoginDto: {}", userLoginDto);
-        String token = authService.authenticate(userLoginDto);
-        log.info("token: {}", token);
-        if (token != null) {
-            log.info("JWT Token: {}", token);
-
-            // JWT 토큰을 쿠키에 저장
-            Cookie cookie = new Cookie("AUTH_TOKEN", token);
-            cookie.setHttpOnly(true); // 클라이언트 측 스크립트에서 쿠키를 접근할 수 없도록 설정
-            cookie.setSecure(true); // HTTPS를 사용하는 경우에만 쿠키를 전송하도록 설정 (필요시)
-            cookie.setPath("/"); // 쿠키의 유효 범위를 설정 (전체 도메인)
-            cookie.setMaxAge(60 * 60 * 24); // 쿠키의 유효 기간 (예: 1일)
-
-            response.addCookie(cookie);
-
-            return "user/success"; // 성공 페이지로 이동
-        } else {
-            return "redirect:/?error=true"; // 로그인 실패 시 다시 로그인 페이지로
-        }
+    @GetMapping("/success")
+    public String loginSuccess() {
+        log.info("loginSuccess");
+        return "user/success";
     }
 }
