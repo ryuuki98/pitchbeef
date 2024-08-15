@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>User Registration</title>
+    <script src="/js/validationJoin.js" defer></script>
+
 </head>
 <body>
 <h1>User Registration</h1>
@@ -10,7 +12,8 @@
 <form th:action="@{/user/joinProcess}" th:object="${userJoinDto}" method="post">
     <div>
         <label for="username">Username:</label>
-        <input type="text" id="username" th:field="*{username}" required />
+        <input type="text" id="username" th:field="*{username}" required onChange="checkUsername()"/>
+        <span id="usernameError" style="color:red;display:none;">이미 사용 중인 닉네임입니다.</span> <!-- 오류 메시지 -->
     </div>
 
     <div>
