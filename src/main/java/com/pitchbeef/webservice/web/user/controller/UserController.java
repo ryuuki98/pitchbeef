@@ -41,6 +41,6 @@ public class UserController {
     @GetMapping("/success")
     public String loginSuccess() {
         log.info("loginSuccess");
-        return "user/success";
+        return "redirect:/";
     }
 }
